@@ -1,4 +1,5 @@
 const fastify = require("fastify")({ logger: true });
+require('dotenv').config()
 
 const db = require("./models");
 db.sequelize.sync();
@@ -21,7 +22,7 @@ const routes = [
       } catch (err) {
         return {
           message:
-            err.message || "Some error occurred while retrieving tutorials.",
+            `---> Error: ${err.message}` || "Some error occurred while retrieving tutorials.",
         };
       }
     },
@@ -95,8 +96,8 @@ routes.forEach((route, index) => {
 
 const start = async () => {
   try {
-    await fastify.listen(3000);
-    fastify.log.info(`server listening on ${fastify.server.address().port}`);
+    await fastify.listen(process.env.PORT || 3001, '0.0.0.0');
+    fastify.log.info(`🏃--------> server listening on ${fastify.server.address().port}`);
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);

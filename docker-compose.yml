@@ -1,0 +1,38 @@
+version: "3.4"
+services:
+  api:
+    build: 
+      context: .
+    image: nodejs/mysql
+    command: yarn dev
+    ports:
+      - "3001:3001"
+    volumes:
+      - .:/back-end
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - PORT=3001
+      - CORE_MYSQL_USER=root
+      - CORE_MYSQL_PASSWORD=root
+      - CORE_MYSQL_DATABASE=api_fastfy_mysql
+      - CORE_MYSQL_HOST=db
+      - CORE_MYSQL_PORT=3309
+      - CORE_MYSQL_POOL_MIN=1
+      - CORE_MYSQL_POOL_MAX=5
+    depends_on: 
+      - db
+
+  db:
+    image: mysql:5.7
+    container_name: mysqlFastfy_5.7
+    command:
+      - --default-authentication-plugin=mysql_native_password 
+      - --innodb-use-native-aio=0
+    restart: always
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=api_fastfy_mysql
+    ports:
+      - 3309:3308
